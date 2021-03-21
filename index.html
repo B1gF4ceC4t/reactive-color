@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>reactive-color</title>
+		<style>
+			.container {
+				text-align: center;
+				margin: 20px 0;
+			}
+			#color {
+				width: 200px;
+				height: 200px;
+				margin: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<input id="r" type="range" min="0" max="255" step="1" value="255" />
+			<input id="g" type="range" min="0" max="255" step="1" value="255" />
+			<input id="b" type="range" min="0" max="255" step="1" value="255" />
+		</div>
+
+		<div id="color"></div>
+	</body>
+	<script src="./proxy-reactive.js"></script>
+	<script>
+		try {
+			var reactive = window.reactive;
+			var effect = window.effect;
+
+			var c = { r: 0, g: 0, b: 0 };
+			var color = reactive(c);
+
+			var rDom = document.getElementById("r");
+			var gDom = document.getElementById("g");
+			var bDom = document.getElementById("b");
+			var colorDom = document.getElementById("color");
+
+			rDom.addEventListener("change", function (e) {
+				color.r = e.target.value;
+			});
+			gDom.addEventListener("change", function (e) {
+				color.g = e.target.value;
+			});
+			bDom.addEventListener("change", function (e) {
+				color.b = e.target.value;
+			});
+
+			effect(function () {
+				console.log("r effect");
+				rDom.setAttribute("value", color.r);
+			});
+
+			effect(function () {
+				console.log("g effect");
+				gDom.setAttribute("value", color.g);
+			});
+
+			effect(function () {
+				console.log("b effect");
+				bDom.setAttribute("value", color.b);
+			});
+
+			effect(function () {
+				console.log("color effect");
+				colorDom.style.backgroundColor =
+					"rgb(" + color.r + "," + color.g + "," + color.b + ")";
+			});
+		} catch (error) {
+			console.warn(error);
+		}
+	</script>
+</html>
